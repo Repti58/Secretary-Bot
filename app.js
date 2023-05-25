@@ -54,16 +54,19 @@ bot.on("message", async (msg) => {
     );
 
     // Добавляем нового участника в базу
-    await addParticipant(msg.chat);
-    const AllParticipantsData = await getAllParticipants(senderUserName);
-    AllParticipantsData.forEach((participant) => {
-      const chatId = participant.id;
-      bot.sendMessage(
-        chatId,
-        `_SecretaryBot_: У нас новый участник - ${senderName} (@${senderUserName})!`,
-        opts
-      );
-    });
+    if (await addParticipant(msg.chat)) {
+      
+      // Оповещам всех участников о новом участнике
+      const AllParticipantsData = await getAllParticipants(senderUserName);
+      AllParticipantsData.forEach((participant) => {
+        const chatId = participant.id;
+        bot.sendMessage(
+          chatId,
+          `_SecretaryBot_: У нас новый участник - ${senderName} (@${senderUserName})!`,
+          opts
+        );
+      });
+    }
   } else if (text === "/help") {
     // Отправляем шаблон сообщения
     bot.sendMessage(senderChatId, templateMessage, opts);
@@ -150,12 +153,14 @@ async function addParticipant(newParticipant) {
     try {
       await collection.insertOne(newParticipant);
       console.log("Участник успешно добавлен");
+      return true;
     } catch (error) {
       console.error("Ошибка при добавлении нового участника", error);
     } finally {
       await client.close();
     }
   }
+  return false;
 }
 
 // Функция удаления участника из БД
@@ -220,7 +225,7 @@ function parseMessage(text) {
   if (parse[3]) {
     userNames = parse[3].split(/[,\s]+/).map((username) => {
       if (username.charAt(0) === "@") {
-        return username.slice(1);        
+        return username.slice(1);
       }
       return username;
     });
@@ -235,7 +240,7 @@ function formatDate(date) {
   const fulldate = date.split(/[\/.]/);
   const day = parseInt(fulldate[0]);
   const month = parseInt(fulldate[1]);
-  const year = parseInt(fulldate[2]); 
+  const year = parseInt(fulldate[2]);
   const monthNames = [
     "января",
     "февраля",
