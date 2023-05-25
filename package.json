@@ -4,8 +4,15 @@
   "description": "Привет!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "mongodb": "^5.5.0",
+    "node-telegram-bot-api": "^0.61.0",
+    "nodemon": "^2.0.22"
+  }
 }
