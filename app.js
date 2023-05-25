@@ -205,7 +205,7 @@ async function getAllParticipants(sender) {
 // Функция проверки формата приглашения по шаблону
 function checkMessageFormat(text) {
   const pattern =
-    /^(\d{2}[\/.]\d{2}[\/.]\d{4})\s+(\d{2}:\d{2})\s+(.+)\s+(.+)(?:\s+(@\w+(?:[,\s]*@?\w+)*)?)?$/;
+    /^(\d{2}[\/.]\d{2}[\/.]\d{4})\s+(\d{2}:\d{2})\s+(.+)\s+(.+)(?:\s+(@?\w+(?:[,\s]*@?\w+)*)?)?$/;
   return pattern.test(text);
 }
 
@@ -220,8 +220,7 @@ function parseMessage(text) {
   if (parse[3]) {
     userNames = parse[3].split(/[,\s]+/).map((username) => {
       if (username.charAt(0) === "@") {
-        result = username.slice(1);
-        return result;
+        return username.slice(1);        
       }
       return username;
     });
@@ -247,7 +246,7 @@ function formatDate(date) {
     "июля",
     "августа",
     "сентября",
-    "октярбря",
+    "октября",
     "ноября",
     "декабря",
   ];
